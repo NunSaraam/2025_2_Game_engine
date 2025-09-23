@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dd81f8b276727742b0c5a8830f9894d, type: 3}
+  m_Name: IceBall
+  m_EditorClassIdentifier: 
+  weaponID: IceBall
+  weaponPrefab: {fileID: 5399762849484951725, guid: ab912f905d245e943a0d35cefc75d040,
+    type: 3}
+  weaponDamage: 1
+  fireSpeed: 50
+  lifeTime: 2
