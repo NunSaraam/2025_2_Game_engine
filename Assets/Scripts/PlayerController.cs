@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public int maxHP = 100;
     public float speed = 4f;
     public float runSpeed = 7f;
     private float currentSpeed;
@@ -25,15 +27,18 @@ public class PlayerController : MonoBehaviour
 
     public bool isGrounded;
 
+    public Slider hpSlider;
     public CinemachineSwitcher cS;
 
-
+    private int currentHP;
     private void Start()
     {
+        currentHP = maxHP;
         currentSpeed = speed;
         Cursor.lockState = CursorLockMode.Locked;
         controller = GetComponent<CharacterController>();
         pov = virtualCam.GetCinemachineComponent<CinemachinePOV>();
+        hpSlider.value = 1f;
     }
 
     private void Update()
@@ -43,6 +48,11 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            pov.m_HorizontalAxis.Value = transform.eulerAngles.y;
+            pov.m_VerticalAxis.Value = 0f;
+        }
         if (Input.GetKey(KeyCode.LeftShift))
         {
             currentSpeed = runSpeed;
@@ -85,5 +95,19 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;
+        hpSlider.value = (float)currentHP / maxHP;
+        if (currentHP <= 0)
+        {
+            Die();
+        }
+    }
 
+    public void Die()
+    {
+        Destroy(gameObject);
+
+    }
 }
