@@ -93,6 +93,12 @@ public class PerlinNoiseVoxelMap : MonoBehaviour
             tileZ = z,
             tileType = "Dirt"
         });
+
+        var b = go.GetComponent<Block>() ?? go .AddComponent<Block>();
+        b.type = BlockType.Dirt;
+        b.maxHP = 3;
+        b.dropCount = 1;
+        b.mineable = true;
     }
 
     void PlaceGrass(int x, int y, int z)
@@ -108,6 +114,12 @@ public class PerlinNoiseVoxelMap : MonoBehaviour
             tileZ = z,
             tileType = "Grass"
         });
+
+        var b = go.GetComponent<Block>() ?? go.AddComponent<Block>();
+        b.type = BlockType.Grass;
+        b.maxHP = 3;
+        b.dropCount = 1;
+        b.mineable = true;
     }
 
     void PlaceWater(int x, int y, int z)
@@ -123,5 +135,11 @@ public class PerlinNoiseVoxelMap : MonoBehaviour
             tileZ = z,
             tileType = "Water"
         });
+
+        var b = go.GetComponent<Block>() ?? go.AddComponent<Block>();
+        b.type = BlockType.Water;
+        b.maxHP = 3;
+        b.dropCount = 1;
+        b.mineable = false;
     }
 }
