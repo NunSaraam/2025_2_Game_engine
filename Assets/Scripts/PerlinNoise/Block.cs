@@ -12,6 +12,9 @@ public enum BlockType
 
 public class Block : MonoBehaviour
 {
+    public Sprite itemicon;
+    public int maxStack = 64;
+
     public BlockType type = BlockType.Dirt;
 
     public int maxHP = 3;
@@ -20,6 +23,8 @@ public class Block : MonoBehaviour
 
     public int dropCount = 1;
     public bool mineable = true;
+
+    public Block blockPrefab;
 
     private void Awake()
     {
@@ -32,7 +37,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void Hit(int damage, Inventory inven)
+    public void Hit(int damage)
     {
         if (!mineable) return;
 
@@ -40,11 +45,20 @@ public class Block : MonoBehaviour
 
         if (hp <= 0)
         {
-            if (inven != null && dropCount > 0)
+            if (InventoryManager.Instance != null)
             {
-                inven.Add(type, dropCount);
+                if (blockPrefab == null)
+                {
+                    return;
+                }
+
+                bool added = InventoryManager.Instance.AddItem(blockPrefab, dropCount);
+
+                if (added)
+                {
+                    Destroy(gameObject);
+                }
             }
-            Destroy(gameObject);
         }
     }
 }

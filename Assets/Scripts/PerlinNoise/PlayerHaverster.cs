@@ -34,7 +34,7 @@ public class PlayerHaverster : MonoBehaviour
 
                 if (block != null)
                 {
-                    block.Hit(toolDamage, inventory);
+                    block.Hit(toolDamage);
                 }
             }
         }

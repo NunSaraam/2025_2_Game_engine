@@ -6,6 +6,8 @@ public class Inventory : MonoBehaviour
 {
     public Dictionary<BlockType, int> items = new();
 
+    public int maxStack = 64;
+
     public void Add(BlockType type, int count = 1)
     {
         if (!items.ContainsKey(type)) items[type] = 0;
