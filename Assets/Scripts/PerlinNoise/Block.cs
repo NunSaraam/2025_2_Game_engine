@@ -7,7 +7,8 @@ public enum BlockType
     Dirt,
     Grass,
     Water,
-
+    Diamond,
+    cloud,
 }
 
 public class Block : MonoBehaviour
@@ -37,7 +38,7 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void Hit(int damage)
+    public void Hit(int damage, Inventory inven)
     {
         if (!mineable) return;
 
@@ -45,20 +46,26 @@ public class Block : MonoBehaviour
 
         if (hp <= 0)
         {
-            if (InventoryManager.Instance != null)
+            if (inven != null && dropCount > 0)
             {
-                if (blockPrefab == null)
-                {
-                    return;
-                }
-
-                bool added = InventoryManager.Instance.AddItem(blockPrefab, dropCount);
-
-                if (added)
-                {
-                    Destroy(gameObject);
-                }
+                inven.Add(type, dropCount);
             }
+            Destroy(gameObject);
+
+            //if (InventoryManager.Instance != null)
+            //{
+            //    if (blockPrefab == null)
+            //    {
+            //        return;
+            //    }
+
+            //    bool added = InventoryManager.Instance.AddItem(blockPrefab, dropCount);
+
+            //    if (added)
+            //    {
+            //        Destroy(gameObject);
+            //    }
+            //}
         }
     }
 }

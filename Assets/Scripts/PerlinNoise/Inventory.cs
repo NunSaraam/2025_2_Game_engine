@@ -6,13 +6,21 @@ public class Inventory : MonoBehaviour
 {
     public Dictionary<BlockType, int> items = new();
 
+    public InventoryUI inventoryUI;
+
     public int maxStack = 64;
+
+    private void Start()
+    {
+        inventoryUI = FindObjectOfType<InventoryUI>();
+    }
 
     public void Add(BlockType type, int count = 1)
     {
         if (!items.ContainsKey(type)) items[type] = 0;
         items[type] += count;
         Debug.Log($"[inventory] +{count} {type} (รั {items[type]}");
+        inventoryUI.UpdateInventory(this);
     }
 
     public bool Consume(BlockType type, int count = 1)
@@ -21,6 +29,16 @@ public class Inventory : MonoBehaviour
 
         items[type] = have - count;
         Debug.Log($"[inventory] -{count} {type} (รั {items[type]}");
+        if (items[type] == 0)
+        {
+            items.Remove(type);
+            inventoryUI.selectedIndex = -1;
+            inventoryUI.Resetselection();
+        }
+
+        inventoryUI.UpdateInventory(this);
         return true;
     }
+
+    
 }

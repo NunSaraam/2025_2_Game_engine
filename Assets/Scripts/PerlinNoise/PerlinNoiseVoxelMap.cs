@@ -80,6 +80,25 @@ public class PerlinNoiseVoxelMap : MonoBehaviour
         }
     }
 
+    public void PlaceTile(Vector3Int pos, BlockType type)
+    {
+        switch (type)
+        {
+            case BlockType.Dirt:
+                Place(pos.x, pos.y, pos.z);
+                break;
+            case BlockType.Grass:
+                PlaceGrass(pos.x, pos.y, pos.z);
+                break;
+            case BlockType.Water:
+                PlaceWater(pos.x, pos.y, pos.z);
+                break;
+            case BlockType.Diamond:
+                PlaceDiamond(pos.x, pos.y, pos.z);
+                break;
+        }
+    }
+
     void Place(int x, int y, int z)
     {
         var go = Instantiate(dirtPrefab, new Vector3(x, y, z), Quaternion.identity, transform);
@@ -141,5 +160,26 @@ public class PerlinNoiseVoxelMap : MonoBehaviour
         b.maxHP = 3;
         b.dropCount = 1;
         b.mineable = false;
+    }
+
+    void PlaceDiamond(int x, int y, int z)
+    {
+        var go = Instantiate(dirtPrefab, new Vector3(x, y, z), Quaternion.identity, transform);
+        go.name = $"Diamond_{x}_{y}_{z}";
+        hasBlock[x, y, z] = true;
+
+        tileInfos.Add(new TileInfos()
+        {
+            tileX = x,
+            tileY = y,
+            tileZ = z,
+            tileType = "Diamond"
+        });
+
+        var b = go.GetComponent<Block>() ?? go.AddComponent<Block>();
+        b.type = BlockType.Diamond;
+        b.maxHP = 3;
+        b.dropCount = 1;
+        b.mineable = true;
     }
 }
