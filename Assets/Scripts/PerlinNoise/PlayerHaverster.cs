@@ -13,7 +13,7 @@ public class PlayerHaverster : MonoBehaviour
 
     private float _nextHitTime;
     private Camera _cam;
-    private Inventory inventory;
+    [SerializeField] private Inventory inventory;
     InventoryUI inventoryUI;
 
     private void Awake()
@@ -29,56 +29,22 @@ public class PlayerHaverster : MonoBehaviour
     {
         if (inventoryUI.selectedIndex < 0)
         {
-            selectedBlock.transform.localScale = Vector3.zero;
-
-            if (Input.GetMouseButtonDown(0) && Time.time >= _nextHitTime)
-            {
-                _nextHitTime = Time.time + hitCooldown;
-
-                Ray ray = _cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
-
-                if (Physics.Raycast(ray, out var hit, rayDistance, hitMask, QueryTriggerInteraction.Ignore))
-                {
-                    var block = hit.collider.GetComponent<Block>();
-
-                    if (block != null)
-                    {
-                        block.Hit(toolDamage, inventory);
-                    }
-                }
-            }
+            HaversterMode(toolDamage);
         }
         else
         {
-            Ray rayDebug = _cam.ViewportPointToRay(new Vector3(.5f,.5f,0));
-            if (Physics.Raycast(rayDebug, out var hitDebug, rayDistance, hitMask, QueryTriggerInteraction.Ignore))
+            switch (inventoryUI.GetInventorySlot())
             {
-                Vector3Int placePos = AdjacentCellOnHitFace(hitDebug);
-                selectedBlock.transform.localScale = Vector3.one;
-                selectedBlock.transform.position = placePos;
-                selectedBlock.transform.rotation = Quaternion.identity;
-            }
-            else
-            {
-                selectedBlock.transform.localScale = Vector3.zero;
+                case ItemType.Sword:
+                    HaversterMode(10);
+                    break;
+                default:
+                    BuildMode();
+                    break;
             }
 
-            if (Input.GetMouseButtonDown(0))
-            {
 
-                Ray ray = _cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
 
-                if (Physics.Raycast(ray, out var hit, rayDistance, hitMask, QueryTriggerInteraction.Ignore))
-                {
-                    Vector3Int placePos = AdjacentCellOnHitFace(hit);
-
-                    BlockType selected = inventoryUI.GetInventorySlot();
-                    if (inventory.Consume(selected, 1))
-                    {
-                        FindObjectOfType<PerlinNoiseVoxelMap>().PlaceTile(placePos, selected);
-                    }
-                }
-            }
         }
     }
 
@@ -87,5 +53,60 @@ public class PlayerHaverster : MonoBehaviour
         Vector3 baseCenter = hit.collider.transform.position;
         Vector3 adjCenter = baseCenter + hit.normal;
         return Vector3Int.RoundToInt(adjCenter);
+    }
+
+    public void BuildMode()
+    {
+
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            Ray ray = _cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
+
+            if (Physics.Raycast(ray, out var hit, rayDistance, hitMask, QueryTriggerInteraction.Ignore))
+            {
+                Vector3Int placePos = AdjacentCellOnHitFace(hit);
+
+                ItemType selected = inventoryUI.GetInventorySlot();
+                if (inventory.Consume(selected, 1))
+                {
+                    FindObjectOfType<PerlinNoiseVoxelMap>().PlaceTile(placePos, selected);
+                }
+            }
+        }
+
+        Ray rayDebug = _cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
+        if (Physics.Raycast(rayDebug, out var hitDebug, rayDistance, hitMask, QueryTriggerInteraction.Ignore))
+        {
+            Vector3Int placePos = AdjacentCellOnHitFace(hitDebug);
+            selectedBlock.transform.localScale = Vector3.one;
+            selectedBlock.transform.position = placePos;
+            selectedBlock.transform.rotation = Quaternion.identity;
+        }
+        else
+        {
+            selectedBlock.transform.localScale = Vector3.zero;
+        }
+    }
+
+    public void HaversterMode(int damage)
+    {
+        selectedBlock.transform.localScale = Vector3.zero;
+        if (Input.GetMouseButtonDown(0) && Time.time >= _nextHitTime)
+        {
+            _nextHitTime = Time.time + hitCooldown;
+
+            Ray ray = _cam.ViewportPointToRay(new Vector3(.5f, .5f, 0));
+
+            if (Physics.Raycast(ray, out var hit, rayDistance, hitMask, QueryTriggerInteraction.Ignore))
+            {
+                var block = hit.collider.GetComponent<Block>();
+
+                if (block != null)
+                {
+                    block.Hit(damage, inventory);
+                }
+            }
+        }
     }
 }

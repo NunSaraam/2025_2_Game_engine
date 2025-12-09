@@ -74,8 +74,7 @@ MonoBehaviour:
   hp: 0
   dropCount: 1
   mineable: 1
-  blockPrefab: {fileID: 3068650975372941457, guid: f9cd6f4c72be4a0438fe44ffedb33392,
-    type: 3}
+  blockPrefab: {fileID: 3068650975372941457}
 --- !u!1 &2099658281363247571
 GameObject:
   m_ObjectHideFlags: 0
